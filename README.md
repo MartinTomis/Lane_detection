@@ -61,7 +61,10 @@ Here is an example of an original image (straight_lines2.jpg) and the same image
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 
+Note: I do this step on a "warped" image, so it does not follow immediately the preceding step.
 
+After the bird's eye view transformation, the I apply mine function gradient_detection to create a binary image. 
+The function uses both gradient thresholding (using only x-derivative) and color-thresholding. 
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
 
 ![alt text][image3]
