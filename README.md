@@ -43,26 +43,21 @@ You're reading it!
 
 I first calibrated the camera using 20 chessboard images for calibration. It turned out that not all images had 9x6 corners (because some of the images are cut-off close to the last corner). So the final calibration matrix is computed using 17 images.
 
-Using information about these images, cv2.calibrateCamera() is used to calculate distortion coefficients and some other outputs required to calculate undistorted images. I do this in my "perspective_transform" function, using cv2.undistort() function.
+Using information about these images, in particular information about the coordinates of their corner points and the corner points of "ideal" chessboard, cv2.calibrateCamera() is used to calculate distortion coefficients and some other outputs required to calculate undistorted images. Subsequently, the images may be undistorted using using cv2.undistort() function.
 
+Here is an example:
+![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/calibration_distorted%20vs%20undistorted.png)
 
+Calibration is performed in lines 13-40 of the code. Undistorting of line images is performed in function "perspective transform".
 
-The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
+**Pipeline (single images)**
 
-I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
-
-I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
-
-![alt text][image1]
-
-###Pipeline (single images)
-
-####1. Provide an example of a distortion-corrected image.
+**1. Provide an example of a distortion-corrected image.**
 Here is an example of an original image (straight_lines2.jpg) and the same image after applying "undistorting".
 ![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/original_vs_undistorted.png)
 
 
-####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+**2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.**
 
 
 Note: I do this step on a "warped" image, so it does not follow immediately the preceding step.
@@ -70,11 +65,15 @@ Note: I do this step on a "warped" image, so it does not follow immediately the 
 I use mine function gradient_detection() to create a binary image. 
 The function first converts images to the HLS color space and then uses both gradient thresholding (using only x-derivative) and color-thresholding (Saturation-channel). Initially I used only gradient-thresholding, but this did not work well for the part of the road with lighter track, where there is lower contrast between the line and the road.
 
+I increased sensitivity (decreased lower threshold for the color by cca 40%) compared to the code show in lecture, as the original setting did not correctly identify lines in some segments of the road with light surface.
+
+In code, this all is done in lines 86-102. This function is later called in lines 332 for the first frame and line 370 for other frames.
+
 ![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/thresholding.png)
 
 
 
-####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
+**3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.**
 
 Applying the perspective transform requires identifying 4 points (if cv2.getPerspectiveTransform() is used) in the original image and 4 new points, forming a rectangle, so that the original points are essentially "stretched" to allign with these new points. All other points in lying in between the 4 corner points of the original image, will also be "stretched". The entire transformation changes dimensions while maintaining that straight lines remain straight.
 
