@@ -43,7 +43,7 @@ I first calibrated the camera using 20 chessboard images for calibration. It tur
 
 Using information about these images, cv2.calibrateCamera() is used to calculate distortion coefficients and some other outputs required to calculate undistorted images. I do this in my "perspective_transform" function, using cv2.undistort() function.
 
-![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/original_vs_undistorted.png)
+
 
 The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
 
@@ -56,15 +56,22 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ###Pipeline (single images)
 
 ####1. Provide an example of a distortion-corrected image.
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![alt text][image2]
+Here is an example of an original image (straight_lines2.jpg) and the same image after applying "undistorting".
+![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/original_vs_undistorted.png)
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+
+
+
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
 
 ![alt text][image3]
 
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
+Applying the perspective transform requires identifying 4 points (if cv2.getPerspectiveTransform() is used) in the original image and 4 new points, forming a rectangle, so that the original points are essentially "stretched" to allign with these new points. All other points in lying in between the 4 corner points of the original image, will also be "stretched". The entire transformation changes dimensions while maintaining that straight lines remain straight.
+
+To identify the relevant region, I used defined function region_of_interest() which takes image and 4 vertices as an input and produces the same image with the are outside of the relevant region shaded. The same vertices will be later used to create the perspective transformation, so I then played a bit with the setting of the vertices, to ensure that the results are good. Here is the final setting: 
+![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/region_of_interest.png)
 The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
 ```
