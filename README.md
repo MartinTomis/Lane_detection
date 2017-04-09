@@ -110,7 +110,11 @@ For the first frame of a video, a separate treatment is applied. Function "slidi
 
 Three coefficients for each of the 2 lines are fitted (square term, linear term and an intercept) and passed to mine function find_lines(), applied to all but the first image. The function is again heavily based on the code shown in lectures.
 
-This time, it is not necessary to use histogram to identify "x-coordinates" where the line pixels should lie. Instead, the starting pixels whose coordinates are regressed are identified in the area around fitted curves - using "previous" coefficients.
+This time, it is not necessary to use histogram to identify "x-coordinates" where the line pixels should lie. Instead, the starting pixels whose coordinates are regressed are identified in the area around fitted curves - using "past" coefficients.
+
+I tried multiple options of what should be the "past" coefficients:
+* Coefficients from the 1st frame - disadvantage is that is once the line in the current frame is very curved, the pixels may not lie in the block centered around the fitted line. As a result, the predictions are quite unstable. Advantage is that there is always a reasonable starting point (provided the first frame is "nice").
+* Smoothed/weighted coefficients from the immediately preceding frame - this really smooths resuls, however the disadvantage is that if in few preceding frames there is "irregularity" and the fitted curve by mistake changes shape dramatically, the line may essentially dissapear - this issue can be somwhow mitigated by assigning less weight to the most recent observations - with alpha=0.5 I observed a serious problem, for alpha=0.1, there was no such problem. I in the end go for this option in the submitted video, but I would probably prefer the 1st option in a more general setting.
 
 
 
