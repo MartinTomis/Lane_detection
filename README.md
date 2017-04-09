@@ -106,7 +106,12 @@ I verified that my perspective transform was working as expected by drawing the 
 After the bird's eye view transformation, the I apply mine function gradient_detection to create a binary image.
 
 
-For the first frame of a video, a separate treatment is applied. Function "sliding_window" 
+For the first frame of a video, a separate treatment is applied. Function "sliding_window", based on code in lecture videos, initially creates a histogram showing the concentration of pixels of the binary image for different values of x. If, as we do in the project video, we start at a reasonably straight segment of a road and hence identify 2 lines, the function identifies 2 clusters of pixels in the data and then slides along the y-axis, from bottom to top. With each shift of the sliding window, though, the function may adjust even the x position, if a new large cluster is identified. Within each window, "hot" pixels are identified and their x ans y indices are appended to create 2 vectors used to fit a 2nd-order polynomial. As some of the lines are nearly vertical, x is out dependent variable.
+
+
+
+![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/sliding%20window%20output.png)
+
 The function uses both gradient thresholding (using only x-derivative) and color-thresholding. 
 code i
 Then I did sdentifies ome other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
