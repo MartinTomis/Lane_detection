@@ -103,8 +103,13 @@ I verified that my perspective transform was working as expected by drawing the 
 ![alt text][image4]
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
-After the bird's eye view transformation, the code identifies 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+After the bird's eye view transformation, the I apply mine function gradient_detection to create a binary image.
+
+
+For the first frame of a video, a separate treatment is applied. Function "sliding_window" 
+The function uses both gradient thresholding (using only x-derivative) and color-thresholding. 
+code i
+Then I did sdentifies ome other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
 ![alt text][image5]
 
