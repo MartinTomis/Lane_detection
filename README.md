@@ -104,6 +104,7 @@ I tried multiple options of what should be the "past" coefficients:
 * Coefficients from the 1st frame - disadvantage is that is once the line in the current frame is very curved, the pixels may not lie in the block centered around the fitted line. As a result, the predictions are quite unstable. Advantage is that there is always a reasonable starting point (provided the first frame is "nice").
 * Smoothed/weighted coefficients from the immediately preceding frame - this really smooths resuls, however the disadvantage is that if in few preceding frames there is "irregularity" and the fitted curve by mistake changes shape dramatically, the line may essentially dissapear - this issue can be somwhow mitigated by assigning less weight to the most recent observations - with alpha=0.5 I observed a serious problem, for alpha=0.1, there was no such problem. I in the end go for this option in the submitted video, but I would probably prefer the 1st option in a more general setting.
 
+The function for calculating the exponentially weighted MA is called MA and I defined in in line 204-210.
 
 ![alt text][image5]
 
@@ -144,5 +145,5 @@ Here's a [link to my video result](./project_video.mp4)
 
 I thing 2 things would be very useful:
 1. Dynamic adjustment of the "source" points for warping. I need to select as long a segment of road as possible, otherwise the line may look quite straight. But this leads to getting almost a triangle-like shape of the points. The far end of the road is just few dozen pixels wide, so that there is a chance that if there is a sharp turn, the far end of the line is out. Adjusting dynamically the shape would be good.
-2. 
+2. Dynamic adjustment of other parameters, such as alpha in the MA function and thresholding. E.g. if a average saturation of some image decreased, the threshold would also decrease. This would hopefully allow more flexible solution.
 
