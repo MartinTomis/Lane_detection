@@ -75,7 +75,6 @@ In code, this all is done in lines 86-102. This function is later called in line
 
 **3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.**
 
-
 Applying the perspective transform requires identifying 4 points (if cv2.getPerspectiveTransform() is used) in the original image and 4 new points, forming a rectangle, so that the original points are essentially "stretched" to allign with these new points. All other points in lying in between the 4 corner points of the original image, will also be "stretched". The entire transformation changes dimensions while maintaining that straight lines remain straight.
 
 I defined function perspective_transform, which uses as input an image and parameters required to the four points. This is done in lines 72-84.
@@ -87,64 +86,49 @@ Here is the final setting (parameters are shown in lines 58-64):
 
 Seeing that the straight lines from the original image appear paralel to each other on the warped image, I went to another steps.
 
-
 **4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?**
-After the bird's eye view transformation, the I apply mine function gradient_detection to create a binary image. 
+After the bird's eye view transformation, the I apply mine function gradient_detection (described in point 2) to create a binary image. 
 The function uses both gradient thresholding (using only x-derivative) and color-thresholding. After the warped binary picture is created, lines are identified in it. The treatment is different for the first frame and for remaining frames.
 
 
-For the first frame of a video, a separate treatment is applied. Function "sliding_window", based on code in lecture videos, initially creates a histogram showing the concentration of pixels of the binary image for different values of x. If, as we do in the project video, we start at a reasonably straight segment of a road and hence identify 2 lines, the function identifies 2 clusters of pixels in the data and then slides along the y-axis, from bottom to top. With each shift of the sliding window, though, the function may adjust even the x position, if a new large cluster is identified. Within each window, "hot" pixels are identified and their x ans y indices are appended to create 2 vectors used to fit a 2nd-order polynomial. As some of the lines are nearly vertical, x is out dependent variable.
+For the first frame of a video, a separate treatment is applied. Function "sliding_window" (lines 104-202), based on code in lecture videos, initially creates a histogram showing the concentration of pixels of the binary image for different values of x. 
+If, as we do in the project video, we start at a reasonably straight segment of a road and hence identify 2 lines, the function identifies 2 clusters of pixels in the data (lines 111 and 112) and then slides along the y-axis, from bottom to top (lines 133-156). With each shift of the sliding window, though, the function may adjust even the x position, if a new large cluster is identified (153-156). Within each window, "hot" pixels are identified and their x ans y indices are appended to create 2 vectors (145-151) used to fit a 2nd-order polynomial. As some of the lines are nearly vertical, x is out dependent variable.
 
 ![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/sliding%20window%20output.png)
 
-Three coefficients for each of the 2 lines are fitted (square term, linear term and an intercept) and passed to mine function find_lines(), applied to all but the first image. The function is again heavily based on the code shown in lectures.
+Three coefficients for each of the 2 lines are fitted (square term, linear term and an intercept) and passed to mine function find_lines() (lines 215-284), applied to all but the first image. The function is again heavily based on the code shown in lectures.
 
-This time, it is not necessary to use histogram to identify "x-coordinates" where the line pixels should lie. Instead, the starting pixels whose coordinates are regressed are identified in the area around fitted curves - using "past" coefficients.
+This time, it is not necessary to use histogram to identify "x-coordinates" where the line pixels should lie. Instead, the starting pixels whose coordinates are regressed are identified in the area around fitted curves (lines 221-224) - using "past" coefficients.
 
 I tried multiple options of what should be the "past" coefficients:
 * Coefficients from the 1st frame - disadvantage is that is once the line in the current frame is very curved, the pixels may not lie in the block centered around the fitted line. As a result, the predictions are quite unstable. Advantage is that there is always a reasonable starting point (provided the first frame is "nice").
 * Smoothed/weighted coefficients from the immediately preceding frame - this really smooths resuls, however the disadvantage is that if in few preceding frames there is "irregularity" and the fitted curve by mistake changes shape dramatically, the line may essentially dissapear - this issue can be somwhow mitigated by assigning less weight to the most recent observations - with alpha=0.5 I observed a serious problem, for alpha=0.1, there was no such problem. I in the end go for this option in the submitted video, but I would probably prefer the 1st option in a more general setting.
 
 
-
-
-
-
-code i
-Then I did sdentifies ome other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
-
 ![alt text][image5]
 
-####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+**5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.**
 
 To calculate the curvature, I use the formula shown in lecture. The result is very sensitive to changes in the estimated parameters. To decrease this sensitivity, I again apply smoothing to the results - this time by calculating exponentially weighted average of the curvature radius. I apply more smoothing than for the line plotting, as the curvature formula features higher powers and a ration - both decreasing stability of the estimate. I hence use alpha of 0.1.
 
+This is done in lines 177-185 for the first frame (as part of sliding_window function) and 258-276 for other frames (part of find_lines function).
+
 To calculate the distance from the center, I calculate the x-value for both projected lines, at the maximum value of y (bottom of the image). I denote these xl and xr, for the left and right line, respectively. The idea then is simple. Since the image width is 640 pixels, the car is to the right of the center if the mid-point between xl and xr is smaller than 640. To get distance in meters, I rescale the distance between the mid-point and 640 by 3.7/700 (3.7 is approximately the true distance between lines, 700 is the same distance in pixels).
 
+This is done in lines 188-197 for the first frame (as part of sliding_window function) and 254-263 for other frames.
 
 
-    ym_per_pix=30/720
-    xm_per_pix=3.7/700
-    left_fit_cr = np.polyfit(lefty*ym_per_pix, leftx*xm_per_pix, 2)
-    right_fit_cr = np.polyfit(righty*ym_per_pix, rightx*xm_per_pix, 2)
-
-    #print(xl*xm_per_pix, xr*xm_per_pix)
-    off_center=(((xr + xl) / 2.0) - 640) * xm_per_pix
-I did this in lines # through # in my code in `my_other_file.py`
-
-####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
-The code/pipeline creates an image with the new lane markings and saves it into a folder
+**6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+The code/pipeline creates an image with the new lane markings and saves it into a folder**
 
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
-
-![alt text][image6]
+The pipeline first processes the video and saves each frame in a folder (lines 309-325). The images to be processed are hence saved locally, not in memory. Subsequently, each of these images is processed using the functions described above and saved into "output_folder". After all frames are processed, these pictures are combined into a video (lines 390-394).
 
 ---
 
-###Pipeline (video)
+**Pipeline (video)**
 
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+**1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).**
 
 Here's a [link to my video result](./project_video.mp4)
 
