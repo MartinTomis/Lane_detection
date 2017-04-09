@@ -108,6 +108,13 @@ After the bird's eye view transformation, the I apply mine function gradient_det
 
 For the first frame of a video, a separate treatment is applied. Function "sliding_window", based on code in lecture videos, initially creates a histogram showing the concentration of pixels of the binary image for different values of x. If, as we do in the project video, we start at a reasonably straight segment of a road and hence identify 2 lines, the function identifies 2 clusters of pixels in the data and then slides along the y-axis, from bottom to top. With each shift of the sliding window, though, the function may adjust even the x position, if a new large cluster is identified. Within each window, "hot" pixels are identified and their x ans y indices are appended to create 2 vectors used to fit a 2nd-order polynomial. As some of the lines are nearly vertical, x is out dependent variable.
 
+Three coefficients for each of the 2 lines are fitted (square term, linear term and an intercept) and passed to mine function find_lines(), applied to all but the first image. The function is again heavily based on the code shown in lectures.
+
+This time, it is not necessary to use histogram to identify "x-coordinates" where the line pixels should lie. Instead, the starting pixels whose coordinates are regressed are identified in the area around fitted curves - using "previous" coefficients.
+
+
+
+
 
 
 ![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/sliding%20window%20output.png)
