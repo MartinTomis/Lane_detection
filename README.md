@@ -87,7 +87,8 @@ Here is the final setting (parameters are shown in lines 58-64):
 
 Seeing that the straight lines from the original image appear paralel to each other on the warped image, I went to another steps.
 
-**4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?**+
+
+**4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?**
 After the bird's eye view transformation, the I apply mine function gradient_detection to create a binary image. 
 The function uses both gradient thresholding (using only x-derivative) and color-thresholding. After the warped binary picture is created, lines are identified in it. The treatment is different for the first frame and for remaining frames.
 
