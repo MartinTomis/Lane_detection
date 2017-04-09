@@ -103,14 +103,14 @@ I verified that my perspective transform was working as expected by drawing the 
 ![alt text][image4]
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
-
+After the bird's eye view transformation, the code identifies 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
 ![alt text][image5]
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-To calculate the curvature, I use the formula shown in lecture. The result is very sensitive to changes in the estimated parameters. To decrease this sensitivity, I again apply smoothing to the results - this time by calculating exponentially weighted average of the curvature radius. 
+To calculate the curvature, I use the formula shown in lecture. The result is very sensitive to changes in the estimated parameters. To decrease this sensitivity, I again apply smoothing to the results - this time by calculating exponentially weighted average of the curvature radius. I apply more smoothing than for the line plotting, as the curvature formula features higher powers and a ration - both decreasing stability of the estimate. I hence use alpha of 0.1.
 
 To calculate the distance from the center, I calculate the x-value for both projected lines, at the maximum value of y (bottom of the image). I denote these xl and xr, for the left and right line, respectively. The idea then is simple. Since the image width is 640 pixels, the car is to the right of the center if the mid-point between xl and xr is smaller than 640. To get distance in meters, I rescale the distance between the mid-point and 640 by 3.7/700 (3.7 is approximately the true distance between lines, 700 is the same distance in pixels).
 
@@ -139,7 +139,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](https://github.com/MartinTomis/Lane_detection/blob/master/output_video.mp4)
+Here's a [link to my video result](./project_video.mp4)
 
 ---
 
