@@ -153,7 +153,7 @@ To calculate the distance from the center, I calculate the x-value for both proj
 I did this in lines # through # in my code in `my_other_file.py`
 
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
-
+The code/pipeline creates an image with the new lane markings and saves it into a folder
 
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
