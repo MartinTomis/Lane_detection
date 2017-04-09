@@ -138,9 +138,11 @@ Here's a [link to my video result](./project_video.mp4)
 
 ---
 
-###Discussion
+**Discussion**
 
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+**1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?**
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+I thing 2 things would be very useful:
+1. Dynamic adjustment of the "source" points for warping. I need to select as long a segment of road as possible, otherwise the line may look quite straight. But this leads to getting almost a triangle-like shape of the points. The far end of the road is just few dozen pixels wide, so that there is a chance that if there is a sharp turn, the far end of the line is out. Adjusting dynamically the shape would be good.
+2. 
 
