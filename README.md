@@ -123,7 +123,7 @@ This is done in lines 188-197 for the first frame (as part of sliding_window fun
 The code/pipeline creates an image with the new lane markings and saves it into a folder**
 
 After all the transformations, this is how the image looks like.
-![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/final.png)
+![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/final.jpg)
 
 
 Note on pipeline:
