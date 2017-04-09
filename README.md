@@ -139,7 +139,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](https://github.com/MartinTomis/Lane_detection/blob/master/test_video%2C%20a0.1%2C%20new%20paras.mp4)
+Here's a [link to my video result](https://github.com/MartinTomis/Lane_detection/blob/master/output_video.mp4)
 
 ---
 
