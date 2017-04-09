@@ -121,14 +121,18 @@ This is done in lines 188-197 for the first frame (as part of sliding_window fun
 **6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 The code/pipeline creates an image with the new lane markings and saves it into a folder**
 
+After all the transformations, this is how the image looks like.
+![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/final.png)
 
+
+Note on pipeline:
 The pipeline first processes the video and saves each frame in a folder (lines 309-325). The images to be processed are hence saved locally, not in memory. Subsequently, each of these images is processed using the functions described above and saved into "output_folder". After all frames are processed, these pictures are combined into a video (lines 390-394).
 
 ---
 
 **Pipeline (video)**
 
-**1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).**
+**1. Provide a link to your final video output. Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).**
 
 Here's a [link to my video result](./project_video.mp4)
 
