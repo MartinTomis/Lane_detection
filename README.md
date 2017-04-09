@@ -41,7 +41,7 @@ You're reading it!
 
 I first calibrated the camera using 20 chessboard images for calibration. It turned out that not all images had 9x6 corners (because some of the images are cut-off close to the last corner). So the final calibration matrix is computed using 17 images.
 
-Using information about these images, cv2.calibrateCamera() is used to calculate distortion coefficients and some other outputs required to calculate undistorted images. I do this in "perspective_transform" function, using  cv2.undistort() function.
+Using information about these images, cv2.calibrateCamera() is used to calculate distortion coefficients and some other outputs required to calculate undistorted images. I do this in my "perspective_transform" function, using cv2.undistort() function.
 
 The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
 
