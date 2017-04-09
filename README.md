@@ -70,7 +70,9 @@ I used a combination of color and gradient thresholds to generate a binary image
 
 Applying the perspective transform requires identifying 4 points (if cv2.getPerspectiveTransform() is used) in the original image and 4 new points, forming a rectangle, so that the original points are essentially "stretched" to allign with these new points. All other points in lying in between the 4 corner points of the original image, will also be "stretched". The entire transformation changes dimensions while maintaining that straight lines remain straight.
 
-To identify the relevant region, I used defined function region_of_interest() which takes image and 4 vertices as an input and produces the same image with the are outside of the relevant region shaded. The same vertices will be later used to create the perspective transformation, so I then played a bit with the setting of the vertices, to ensure that the results are good. Here is the final setting: 
+To identify the relevant region, I used defined function region_of_interest() which takes image and 4 vertices as an input and produces the same image with the are outside of the relevant region shaded. The same vertices will be later used to create the perspective transformation, so I then played a bit with the setting of the vertices, to ensure that the results are good. 
+
+Here is the final setting: 
 ![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/region_of_interest.png)
 The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
@@ -108,9 +110,24 @@ Then I did some other stuff and fit my lane lines with a 2nd order polynomial ki
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
+To calculate the curvature, I use the formula shown in lecture. The result is very sensitive to changes in the estimated parameters. To decrease this sensitivity, I again apply smoothing to the results - this time by calculating exponentially weighted average of the curvature radius. 
+
+To calculate the distance from the center, I calculate the x-value for both projected lines, at the maximum value of y (bottom of the image). I denote these xl and xr, for the left and right line, respectively. The idea then is simple. Since the image width is 640 pixels, the car is to the right of the center if the mid-point between xl and xr is smaller than 640. To get distance in meters, I rescale the distance between the mid-point and 640 by 3.7/700 (3.7 is approximately the true distance between lines, 700 is the same distance in pixels).
+
+
+
+    ym_per_pix=30/720
+    xm_per_pix=3.7/700
+    left_fit_cr = np.polyfit(lefty*ym_per_pix, leftx*xm_per_pix, 2)
+    right_fit_cr = np.polyfit(righty*ym_per_pix, rightx*xm_per_pix, 2)
+
+    #print(xl*xm_per_pix, xr*xm_per_pix)
+    off_center=(((xr + xl) / 2.0) - 640) * xm_per_pix
 I did this in lines # through # in my code in `my_other_file.py`
 
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+
+
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
