@@ -1,7 +1,5 @@
 # Lane_detection
 
-##Writeup Template
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
 
 ---
 
@@ -40,6 +38,10 @@ You're reading it!
 ###Camera Calibration
 
 ####1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
+
+I first calibrated the camera using 20 chessboard images for calibration. It turned out that not all images had 9x6 corners (because some of the images are cut-off close to the last corner). So the final calibration matrix is computed using 17 images.
+
+Using information about these images, cv2.calibrateCamera() is used to calculate distortion coefficients and some other outputs required to calculate undistorted images. I do this in "perspective_transform" function, using  cv2.undistort() function.
 
 The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
 
