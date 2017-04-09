@@ -58,13 +58,16 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ####1. Provide an example of a distortion-corrected image.
 Here is an example of an original image (straight_lines2.jpg) and the same image after applying "undistorting".
 ![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/original_vs_undistorted.png)
+
+
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 
 Note: I do this step on a "warped" image, so it does not follow immediately the preceding step.
 
-After the bird's eye view transformation, the I apply mine function gradient_detection to create a binary image. 
-The function uses both gradient thresholding (using only x-derivative) and color-thresholding. 
+I use mine function gradient_detection() to create a binary image. 
+The function first converts images to the HLS color space and then uses both gradient thresholding (using only x-derivative) and color-thresholding (Saturation-channel). Initially I used only gradient-thresholding, but this did not work well for the part of the road with lighter track, where there is lower contrast between the line and the road.
+
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
 
 ![alt text][image3]
