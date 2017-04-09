@@ -103,10 +103,13 @@ I verified that my perspective transform was working as expected by drawing the 
 ![alt text][image4]
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
-After the bird's eye view transformation, the I apply mine function gradient_detection to create a binary image.
+After the bird's eye view transformation, the I apply mine function gradient_detection to create a binary image. 
+The function uses both gradient thresholding (using only x-derivative) and color-thresholding. After the warped binary picture is created, lines are identified in it. The treatment is different for the first frame and for remaining frames.
 
 
 For the first frame of a video, a separate treatment is applied. Function "sliding_window", based on code in lecture videos, initially creates a histogram showing the concentration of pixels of the binary image for different values of x. If, as we do in the project video, we start at a reasonably straight segment of a road and hence identify 2 lines, the function identifies 2 clusters of pixels in the data and then slides along the y-axis, from bottom to top. With each shift of the sliding window, though, the function may adjust even the x position, if a new large cluster is identified. Within each window, "hot" pixels are identified and their x ans y indices are appended to create 2 vectors used to fit a 2nd-order polynomial. As some of the lines are nearly vertical, x is out dependent variable.
+
+![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/sliding%20window%20output.png)
 
 Three coefficients for each of the 2 lines are fitted (square term, linear term and an intercept) and passed to mine function find_lines(), applied to all but the first image. The function is again heavily based on the code shown in lectures.
 
@@ -121,9 +124,6 @@ I tried multiple options of what should be the "past" coefficients:
 
 
 
-![alt tag](https://github.com/MartinTomis/Lane_detection/blob/master/sliding%20window%20output.png)
-
-The function uses both gradient thresholding (using only x-derivative) and color-thresholding. 
 code i
 Then I did sdentifies ome other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
